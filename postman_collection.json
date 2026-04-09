@@ -1,0 +1,1138 @@
+{
+  "info": {
+    "_postman_id": "982dbf23-b185-444c-9fb1-f35e5d8d9fed",
+    "name": "Performance API - Test Plan Service",
+    "description": "CRUD API for managing performance test plans, thread groups, and HTTP requests.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "43879616"
+  },
+  "item": [
+    {
+      "name": "Test Plans",
+      "item": [
+        {
+          "name": "Get All Test Plans",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/test-plans",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "test-plans"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Test Plan",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Payment Gateway Load Test\",\n  \"description\": \"Simulates 500 users checking out items.\",\n  \"createdBy\": \"admin_user_01\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/test-plans",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "test-plans"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Test Plan by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/test-plans/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "test-plans",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Test Plan",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Payment Gateway Load Test - Updated\",\n  \"updatedBy\": \"qa_lead_05\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/test-plans/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "test-plans",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Test Plan",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/test-plans/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "test-plans",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Thread Groups",
+      "item": [
+        {
+          "name": "Get All Thread Groups",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/thread-groups",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "thread-groups"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Thread Group",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"testPlanId\": 1,\n  \"name\": \"Checkout Flow Users\",\n  \"numThreads\": 100,\n  \"rampUpTime\": 10,\n  \"loopCount\": 5,\n  \"schedulerEnabled\": false,\n  \"onSampleError\": \"CONTINUE\",\n  \"createdBy\": \"admin_user_01\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/thread-groups",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "thread-groups"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Thread Group by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/thread-groups/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "thread-groups",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Thread Groups by Test Plan ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/thread-groups/test-plan/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "thread-groups",
+                "test-plan",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Thread Group",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"testPlanId\": 1,\n  \"name\": \"Checkout Flow Users - High Load\",\n  \"numThreads\": 500,\n  \"rampUpTime\": 30,\n  \"loopCount\": 10,\n  \"updatedBy\": \"qa_lead_05\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/thread-groups/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "thread-groups",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Thread Group",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/thread-groups/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "thread-groups",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "HTTP Headers",
+      "item": [
+        {
+          "name": "Get All HTTP Headers",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/http-headers",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "http-headers"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create HTTP Header (Thread Group Scope)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"threadGroupId\": 1,\n  \"name\": \"Content-Type\",\n  \"value\": \"application/json\",\n  \"createdBy\": \"admin_user_01\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/http-headers",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "http-headers"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create HTTP Header (Request Scope)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"httpRequestId\": 1,\n  \"name\": \"Authorization\",\n  \"value\": \"Bearer ${auth_token}\",\n  \"createdBy\": \"admin_user_01\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/http-headers",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "http-headers"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get HTTP Header by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/http-headers/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "http-headers",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get HTTP Headers by Thread Group ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/http-headers/thread-group/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "http-headers",
+                "thread-group",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get HTTP Headers by HTTP Request ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/http-headers/http-request/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "http-headers",
+                "http-request",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update HTTP Header",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"httpRequestId\": 1,\n  \"name\": \"Authorization\",\n  \"value\": \"Basic ${encoded_creds}\",\n  \"updatedBy\": \"qa_lead_05\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/http-headers/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "http-headers",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete HTTP Header",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/http-headers/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "http-headers",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "HTTP Requests",
+      "item": [
+        {
+          "name": "Get All HTTP Requests",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/http-requests",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "http-requests"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create HTTP Request",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"threadGroupId\": 1,\n  \"name\": \"OAuth Token Generator\",\n  \"description\": \"Generates\",\n  \"sequenceOrder\": 1,\n  \"protocol\": \"https\",\n  \"domain\": \"om.dev.metronet.cloud\",\n  \"port\": 443,\n  \"method\": \"POST\",\n  \"path\": \"/prweb/PRRestService/oauth2/v1/token/\",\n  \"followRedirects\": true,\n  \"useKeepalive\": true,\n  \"createdBy\": \"admin_user_01\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/http-requests",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "http-requests"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get HTTP Request by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/http-requests/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "http-requests",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get HTTP Requests by Thread Group ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/http-requests/thread-group/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "http-requests",
+                "thread-group",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update HTTP Request",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"threadGroupId\": 1,\n  \"name\": \"1. Login API Request - Updated\",\n  \"sequenceOrder\": 1,\n  \"protocol\": \"https\",\n  \"domain\": \"api.example.com\",\n  \"port\": 443,\n  \"method\": \"POST\",\n  \"path\": \"/v1/auth/login\",\n  \"bodyData\": \"{\\\"username\\\":\\\"loadtest_user\\\",\\\"password\\\":\\\"new_secret\\\"}\",\n  \"updatedBy\": \"qa_lead_05\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/http-requests/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "http-requests",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete HTTP Request",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/http-requests/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "http-requests",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Test Plan Variables",
+      "item": [
+        {
+          "name": "Get All Test Plan Variables",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/test-plan-variables",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "test-plan-variables"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Test Plan Variable",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"testPlanId\": 1,\n  \"name\": \"base_url\",\n  \"value\": \"api.example.com\",\n  \"description\": \"The base URL for the target environment\",\n  \"createdBy\": \"admin_user_01\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/test-plan-variables",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "test-plan-variables"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Test Plan Variable by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/test-plan-variables/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "test-plan-variables",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Variables by Test Plan ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/test-plan-variables/test-plan/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "test-plan-variables",
+                "test-plan",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Test Plan Variable",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"testPlanId\": 1,\n  \"name\": \"base_url\",\n  \"value\": \"staging.api.example.com\",\n  \"description\": \"Updated to hit the staging environment\",\n  \"updatedBy\": \"qa_lead_05\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/test-plan-variables/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "test-plan-variables",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Test Plan Variable",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/test-plan-variables/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "test-plan-variables",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Data Extractors",
+      "item": [
+        {
+          "name": "Get All Data Extractors",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/data-extractors",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "data-extractors"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Data Extractor (JSONPath)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"httpRequestId\": 1,\n  \"name\": \"Extract Auth Token\",\n  \"extractorType\": \"JSON_PATH\",\n  \"variableName\": \"auth_token\",\n  \"expression\": \"$.token\",\n  \"matchNumber\": 1,\n  \"defaultValue\": \"NOT_FOUND\",\n  \"createdBy\": \"admin_user_01\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/data-extractors",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "data-extractors"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Data Extractor by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/data-extractors/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "data-extractors",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Data Extractors by HTTP Request ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/data-extractors/http-request/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "data-extractors",
+                "http-request",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Data Extractor",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"httpRequestId\": 1,\n  \"name\": \"Extract Auth Token - Updated\",\n  \"extractorType\": \"JSON_PATH\",\n  \"variableName\": \"auth_token\",\n  \"expression\": \"$.data.jwtToken\",\n  \"matchNumber\": 1,\n  \"defaultValue\": \"NO_TOKEN\",\n  \"updatedBy\": \"qa_lead_05\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/data-extractors/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "data-extractors",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Data Extractor",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/data-extractors/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "data-extractors",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "load-test",
+      "item": [
+        {
+          "name": "run",
+          "item": [
+            {
+              "name": "{testPlanId}",
+              "item": [
+                {
+                  "name": "Execute a test plan",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/api/load-test/run/:testPlanId",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "load-test",
+                        "run",
+                        ":testPlanId"
+                      ],
+                      "variable": [
+                        {
+                          "key": "testPlanId",
+                          "value": "8362",
+                          "description": "ID of the test plan to execute"
+                        }
+                      ]
+                    },
+                    "description": "Triggers a performance test execution for a specific test plan asynchronously."
+                  },
+                  "response": [
+                    {
+                      "name": "Test execution initiated",
+                      "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/api/load-test/run/:testPlanId",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "load-test",
+                            "run",
+                            ":testPlanId"
+                          ],
+                          "variable": [
+                            {
+                              "key": "testPlanId",
+                              "value": "8362",
+                              "description": "ID of the test plan to execute"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "body": "{\n  \"message\": \"Test execution initiated successfully\",\n  \"executionId\": 101,\n  \"status\": \"IN_PROGRESS\"\n}"
+                    },
+                    {
+                      "name": "Test plan not found",
+                      "originalRequest": {
+                        "method": "POST",
+                        "header": [],
+                        "url": {
+                          "raw": "{{baseUrl}}/api/load-test/run/:testPlanId",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "load-test",
+                            "run",
+                            ":testPlanId"
+                          ],
+                          "variable": [
+                            {
+                              "key": "testPlanId",
+                              "value": "8362",
+                              "description": "ID of the test plan to execute"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "Not Found",
+                      "code": 404,
+                      "_postman_previewlanguage": "text",
+                      "header": [],
+                      "cookie": [],
+                      "body": ""
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "status",
+          "item": [
+            {
+              "name": "{executionId}",
+              "item": [
+                {
+                  "name": "Get execution status",
+                  "request": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Accept",
+                        "value": "application/json"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/api/load-test/status/:executionId",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "api",
+                        "load-test",
+                        "status",
+                        ":executionId"
+                      ],
+                      "variable": [
+                        {
+                          "key": "executionId",
+                          "value": "8362",
+                          "description": "ID of the execution to check"
+                        }
+                      ]
+                    },
+                    "description": "Retrieves the current status and details of a specific test execution."
+                  },
+                  "response": [
+                    {
+                      "name": "Execution details found",
+                      "originalRequest": {
+                        "method": "GET",
+                        "header": [
+                          {
+                            "key": "Accept",
+                            "value": "application/json"
+                          }
+                        ],
+                        "url": {
+                          "raw": "{{baseUrl}}/api/load-test/status/:executionId",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "load-test",
+                            "status",
+                            ":executionId"
+                          ],
+                          "variable": [
+                            {
+                              "key": "executionId",
+                              "value": "8362",
+                              "description": "ID of the execution to check"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "OK",
+                      "code": 200,
+                      "_postman_previewlanguage": "json",
+                      "header": [
+                        {
+                          "key": "Content-Type",
+                          "value": "application/json"
+                        }
+                      ],
+                      "cookie": [],
+                      "body": "{\n  \"id\": 7240,\n  \"testPlanId\": 4876,\n  \"status\": \"COMPLETED\",\n  \"startTime\": \"1994-03-15T10:43:07.102Z\",\n  \"endTime\": \"1980-09-15T14:07:23.794Z\",\n  \"s3Key\": \"string\",\n  \"errorMessage\": \"string\"\n}"
+                    },
+                    {
+                      "name": "Execution record not found",
+                      "originalRequest": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                          "raw": "{{baseUrl}}/api/load-test/status/:executionId",
+                          "host": [
+                            "{{baseUrl}}"
+                          ],
+                          "path": [
+                            "api",
+                            "load-test",
+                            "status",
+                            ":executionId"
+                          ],
+                          "variable": [
+                            {
+                              "key": "executionId",
+                              "value": "8362",
+                              "description": "ID of the execution to check"
+                            }
+                          ]
+                        }
+                      },
+                      "status": "Not Found",
+                      "code": 404,
+                      "_postman_previewlanguage": "text",
+                      "header": [],
+                      "cookie": [],
+                      "body": ""
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    }
+  ]
+}

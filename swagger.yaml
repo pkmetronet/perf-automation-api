@@ -1,0 +1,625 @@
+openapi: 3.0.3
+info:
+  title: Performance API
+  description: CRUD API for managing performance test plans, variables, thread groups, HTTP requests, HTTP headers, data extractors, and test executions.
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+    description: Local development server
+paths:
+  /api/v1/test-plans:
+    get:
+      summary: Retrieve all Test Plans
+      tags: [Test Plans]
+      responses:
+        '200':
+          description: Success
+    post:
+      summary: Create a new Test Plan
+      tags: [Test Plans]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TestPlanCreate'
+      responses:
+        '201':
+          description: Created
+          
+  /api/v1/test-plans/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+    get:
+      summary: Get a Test Plan by ID
+      tags: [Test Plans]
+      responses:
+        '200':
+          description: Success
+    put:
+      summary: Update a Test Plan
+      tags: [Test Plans]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TestPlanUpdate'
+      responses:
+        '200':
+          description: Updated
+    delete:
+      summary: Delete a Test Plan
+      tags: [Test Plans]
+      responses:
+        '204':
+          description: Deleted
+
+  /api/v1/test-plan-variables:
+    get:
+      summary: Retrieve all Test Plan Variables
+      tags: [Test Plan Variables]
+      responses:
+        '200':
+          description: Success
+    post:
+      summary: Create a new Test Plan Variable
+      tags: [Test Plan Variables]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TestPlanVariableCreate'
+      responses:
+        '201':
+          description: Created
+
+  /api/v1/test-plan-variables/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+    get:
+      summary: Get a Test Plan Variable by ID
+      tags: [Test Plan Variables]
+      responses:
+        '200':
+          description: Success
+    put:
+      summary: Update a Test Plan Variable
+      tags: [Test Plan Variables]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TestPlanVariableUpdate'
+      responses:
+        '200':
+          description: Updated
+    delete:
+      summary: Delete a Test Plan Variable
+      tags: [Test Plan Variables]
+      responses:
+        '204':
+          description: Deleted
+
+  /api/v1/test-plan-variables/test-plan/{testPlanId}:
+    parameters:
+      - name: testPlanId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+    get:
+      summary: Get all Variables for a Test Plan
+      tags: [Test Plan Variables]
+      responses:
+        '200':
+          description: Success
+
+  /api/v1/thread-groups:
+    get:
+      summary: Retrieve all Thread Groups
+      tags: [Thread Groups]
+      responses:
+        '200':
+          description: Success
+    post:
+      summary: Create a new Thread Group
+      tags: [Thread Groups]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ThreadGroupCreate'
+      responses:
+        '201':
+          description: Created
+
+  /api/v1/thread-groups/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+    get:
+      summary: Get a Thread Group by ID
+      tags: [Thread Groups]
+      responses:
+        '200':
+          description: Success
+    put:
+      summary: Update a Thread Group
+      tags: [Thread Groups]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ThreadGroupUpdate'
+      responses:
+        '200':
+          description: Updated
+    delete:
+      summary: Delete a Thread Group
+      tags: [Thread Groups]
+      responses:
+        '204':
+          description: Deleted
+
+  /api/v1/thread-groups/test-plan/{testPlanId}:
+    parameters:
+      - name: testPlanId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+    get:
+      summary: Get all Thread Groups for a Test Plan
+      tags: [Thread Groups]
+      responses:
+        '200':
+          description: Success
+
+  /api/v1/http-requests:
+    get:
+      summary: Retrieve all HTTP Requests
+      tags: [HTTP Requests]
+      responses:
+        '200':
+          description: Success
+    post:
+      summary: Create a new HTTP Request
+      tags: [HTTP Requests]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HttpRequestCreate'
+      responses:
+        '201':
+          description: Created
+
+  /api/v1/http-requests/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+    get:
+      summary: Get an HTTP Request by ID
+      tags: [HTTP Requests]
+      responses:
+        '200':
+          description: Success
+    put:
+      summary: Update an HTTP Request
+      tags: [HTTP Requests]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HttpRequestUpdate'
+      responses:
+        '200':
+          description: Updated
+    delete:
+      summary: Delete an HTTP Request
+      tags: [HTTP Requests]
+      responses:
+        '204':
+          description: Deleted
+
+  /api/v1/http-requests/thread-group/{threadGroupId}:
+    parameters:
+      - name: threadGroupId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+    get:
+      summary: Get all HTTP Requests for a Thread Group
+      tags: [HTTP Requests]
+      responses:
+        '200':
+          description: Success
+
+  /api/v1/http-headers:
+    get:
+      summary: Retrieve all HTTP Headers
+      tags: [HTTP Headers]
+      responses:
+        '200':
+          description: Success
+    post:
+      summary: Create a new HTTP Header
+      tags: [HTTP Headers]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HttpHeaderCreate'
+      responses:
+        '201':
+          description: Created
+
+  /api/v1/http-headers/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+    get:
+      summary: Get an HTTP Header by ID
+      tags: [HTTP Headers]
+      responses:
+        '200':
+          description: Success
+    put:
+      summary: Update an HTTP Header
+      tags: [HTTP Headers]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HttpHeaderUpdate'
+      responses:
+        '200':
+          description: Updated
+    delete:
+      summary: Delete an HTTP Header
+      tags: [HTTP Headers]
+      responses:
+        '204':
+          description: Deleted
+
+  /api/v1/http-headers/thread-group/{threadGroupId}:
+    parameters:
+      - name: threadGroupId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+    get:
+      summary: Get headers for a specific Thread Group
+      tags: [HTTP Headers]
+      responses:
+        '200':
+          description: Success
+
+  /api/v1/http-headers/http-request/{httpRequestId}:
+    parameters:
+      - name: httpRequestId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+    get:
+      summary: Get headers for a specific HTTP Request
+      tags: [HTTP Headers]
+      responses:
+        '200':
+          description: Success
+
+  /api/v1/data-extractors:
+    get:
+      summary: Retrieve all Data Extractors
+      tags: [Data Extractors]
+      responses:
+        '200':
+          description: Success
+    post:
+      summary: Create a new Data Extractor
+      tags: [Data Extractors]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DataExtractorCreate'
+      responses:
+        '201':
+          description: Created
+
+  /api/v1/data-extractors/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+    get:
+      summary: Get a Data Extractor by ID
+      tags: [Data Extractors]
+      responses:
+        '200':
+          description: Success
+    put:
+      summary: Update a Data Extractor
+      tags: [Data Extractors]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DataExtractorUpdate'
+      responses:
+        '200':
+          description: Updated
+    delete:
+      summary: Delete a Data Extractor
+      tags: [Data Extractors]
+      responses:
+        '204':
+          description: Deleted
+
+  /api/v1/data-extractors/http-request/{httpRequestId}:
+    parameters:
+      - name: httpRequestId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+    get:
+      summary: Get all Data Extractors for a specific HTTP Request
+      tags: [Data Extractors]
+      responses:
+        '200':
+          description: Success
+
+  /api/v1/test-executions:
+    get:
+      summary: Retrieve all Test Executions
+      tags: [Test Executions]
+      responses:
+        '200':
+          description: Success
+    post:
+      summary: Start/Create a new Test Execution
+      tags: [Test Executions]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TestExecutionCreate'
+      responses:
+        '201':
+          description: Created
+
+  /api/v1/test-executions/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+    get:
+      summary: Get a Test Execution by ID
+      tags: [Test Executions]
+      responses:
+        '200':
+          description: Success
+    delete:
+      summary: Delete a Test Execution
+      tags: [Test Executions]
+      responses:
+        '204':
+          description: Deleted
+
+  /api/v1/test-executions/test-plan/{testPlanId}:
+    parameters:
+      - name: testPlanId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+    get:
+      summary: Get all Executions for a Test Plan
+      tags: [Test Executions]
+      responses:
+        '200':
+          description: Success
+          
+  /api/v1/test-executions/{id}/status:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+    patch:
+      summary: Update the status of a Test Execution (e.g., COMPLETED)
+      tags: [Test Executions]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  example: "COMPLETED"
+      responses:
+        '200':
+          description: Updated
+
+components:
+  schemas:
+    TestPlanCreate:
+      type: object
+      properties:
+        name: { type: string }
+        description: { type: string }
+        createdBy: { type: string }
+    TestPlanUpdate:
+      type: object
+      properties:
+        name: { type: string }
+        description: { type: string }
+        updatedBy: { type: string }
+        
+    TestPlanVariableCreate:
+      type: object
+      properties:
+        testPlanId: { type: integer, format: int64 }
+        name: { type: string }
+        value: { type: string }
+        description: { type: string }
+        createdBy: { type: string }
+    TestPlanVariableUpdate:
+      type: object
+      properties:
+        testPlanId: { type: integer, format: int64 }
+        name: { type: string }
+        value: { type: string }
+        description: { type: string }
+        updatedBy: { type: string }
+        
+    ThreadGroupCreate:
+      type: object
+      properties:
+        testPlanId: { type: integer, format: int64 }
+        name: { type: string }
+        numThreads: { type: integer }
+        rampUpTime: { type: integer }
+        loopCount: { type: integer }
+        schedulerEnabled: { type: boolean }
+        createdBy: { type: string }
+    ThreadGroupUpdate:
+      type: object
+      properties:
+        testPlanId: { type: integer, format: int64 }
+        name: { type: string }
+        numThreads: { type: integer }
+        rampUpTime: { type: integer }
+        loopCount: { type: integer }
+        updatedBy: { type: string }
+        
+    HttpRequestCreate:
+      type: object
+      properties:
+        threadGroupId: { type: integer, format: int64 }
+        name: { type: string }
+        sequenceOrder: { type: integer }
+        protocol: { type: string }
+        domain: { type: string }
+        port: { type: integer }
+        method: { type: string }
+        path: { type: string }
+        bodyData: { type: string }
+        createdBy: { type: string }
+    HttpRequestUpdate:
+      type: object
+      properties:
+        threadGroupId: { type: integer, format: int64 }
+        name: { type: string }
+        sequenceOrder: { type: integer }
+        protocol: { type: string }
+        domain: { type: string }
+        method: { type: string }
+        path: { type: string }
+        bodyData: { type: string }
+        updatedBy: { type: string }
+        
+    HttpHeaderCreate:
+      type: object
+      required: [name, value]
+      properties:
+        threadGroupId: { type: integer, format: int64, description: "Set this if attaching to Thread Group. Omit if attaching to HTTP Request." }
+        httpRequestId: { type: integer, format: int64, description: "Set this if attaching to HTTP Request. Omit if attaching to Thread Group." }
+        name: { type: string, example: "Authorization" }
+        value: { type: string, example: "Bearer ${auth_token}" }
+        createdBy: { type: string }
+    HttpHeaderUpdate:
+      type: object
+      properties:
+        threadGroupId: { type: integer, format: int64 }
+        httpRequestId: { type: integer, format: int64 }
+        name: { type: string }
+        value: { type: string }
+        updatedBy: { type: string }
+        
+    DataExtractorCreate:
+      type: object
+      required: [httpRequestId, name, extractorType, variableName, expression]
+      properties:
+        httpRequestId: { type: integer, format: int64 }
+        name: { type: string, example: "Extract Auth Token" }
+        extractorType: { type: string, example: "JSON_PATH" }
+        variableName: { type: string, example: "auth_token" }
+        expression: { type: string, example: "$.token" }
+        matchNumber: { type: integer, example: 1 }
+        defaultValue: { type: string, example: "NOT_FOUND" }
+        createdBy: { type: string }
+    DataExtractorUpdate:
+      type: object
+      properties:
+        httpRequestId: { type: integer, format: int64 }
+        name: { type: string }
+        extractorType: { type: string }
+        variableName: { type: string }
+        expression: { type: string }
+        matchNumber: { type: integer }
+        defaultValue: { type: string }
+        updatedBy: { type: string }
+
+    TestExecutionCreate:
+      type: object
+      required: [testPlanId]
+      properties:
+        testPlanId: { type: integer, format: int64, example: 1 }
+        status: { type: string, example: "RUNNING" }
+        executedBy: { type: string, example: "admin_user_01" }
