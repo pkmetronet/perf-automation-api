@@ -24,9 +24,14 @@ public class LoadTestController {
      */
     @PostMapping("/run/{testPlanId}")
     public ResponseEntity<?> runTest(@PathVariable Long testPlanId) {
-        // Create an execution record to track progress and link to results
-        TestExecution execution = executionService.getTestExecutionById(testPlanId).orElseThrow(() -> new RuntimeException("Not found"));;
+
+        // Create a NEW execution record to track progress and link to results
+        TestExecution newExecution = new TestExecution();
+        newExecution.setTestPlanId(testPlanId);
+        newExecution.setStatus("IN_PROGRESS");
         
+        TestExecution execution = executionService.createTestExecution(newExecution);        
+
         // Start the JMeter DSL engine in a background thread
         engineService.executeTestPlanAsync(execution.getId(), testPlanId);
         
