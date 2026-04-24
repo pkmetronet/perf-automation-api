@@ -5,8 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.sql.Types;
 import java.time.ZonedDateTime;
 
 @Entity
@@ -28,6 +30,10 @@ public class ThreadGroup {
 
     @Column(columnDefinition = "TEXT")
     private String description;
+
+    @JdbcTypeCode(Types.ARRAY)
+    @Column(name = "request_sequence", columnDefinition = "bigint[]")
+    private Long[] requestSequence;
 
     @Column(name = "num_threads", nullable = false)
     private Integer numThreads = 1;

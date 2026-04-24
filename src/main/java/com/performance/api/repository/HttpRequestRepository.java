@@ -9,6 +9,6 @@ import java.util.List;
 @Repository
 public interface HttpRequestRepository extends JpaRepository<HttpRequest, Long> {
     
-    // Custom query to fetch all requests for a Thread Group, strictly ordered by execution sequence
-    List<HttpRequest> findByThreadGroupIdOrderBySequenceOrderAsc(Long threadGroupId);
+    // Fetch all requests for a Thread Group (sorting is done in service based on requestSequence)
+    List<HttpRequest> findByThreadGroupId(Long threadGroupId);
 }

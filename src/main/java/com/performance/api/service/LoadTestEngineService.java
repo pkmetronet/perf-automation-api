@@ -13,7 +13,7 @@ import us.abstracta.jmeter.javadsl.core.threadgroups.BaseThreadGroup.ThreadGroup
 import us.abstracta.jmeter.javadsl.core.configs.DslVariables;
 import us.abstracta.jmeter.javadsl.core.samplers.BaseSampler;
 
-import java.time.Duration;
+// import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -51,7 +51,7 @@ public class LoadTestEngineService {
     }
 
     public void executeTestPlanAsync(Long testExecutionId, Long testPlanId) {
-        //CompletableFuture.runAsync(() -> {
+        CompletableFuture.runAsync(() -> {
             try {
                 logger.info("Initiating async execution for testExecutionId: {}, testPlanId: {}", testExecutionId, testPlanId);
                 runJMeterDslEngine(testExecutionId, testPlanId);
@@ -59,10 +59,10 @@ public class LoadTestEngineService {
                 logger.error("Unhandled exception in executeTestPlanAsync for executionId: {}. Error: {}", testExecutionId, e.getMessage(), e);
                 testExecutionService.updateTestExecutionStatus(testExecutionId, "FAILED");
             }
-        //});
+        });
     }
 
-    private void runJMeterDslEngine(Long executionId, Long testPlanId) throws Exception {
+private void runJMeterDslEngine(Long executionId, Long testPlanId) throws Exception {
         logger.info("Starting runJMeterDslEngine with inputs -> executionId: {}, testPlanId: {}", executionId, testPlanId);
 
         try {
@@ -88,12 +88,12 @@ public class LoadTestEngineService {
             for (ThreadGroup group : dbThreadGroups) {
                 logger.info("Processing ThreadGroup -> id: {}, name: {}, threads: {}, loops: {}", group.getId(), group.getName(), group.getNumThreads(), group.getLoopCount());
                 
-                List<HttpRequest> requests = httpRequestRepository.findByThreadGroupIdOrderBySequenceOrderAsc(group.getId());
+                List<HttpRequest> requests = httpRequestRepository.findByThreadGroupId(group.getId());
                 logger.info("Fetched {} requests for ThreadGroup id: {}", requests != null ? requests.size() : 0, group.getId());
                 
                 // Map each request into an HTTP Sampler
                 List<ThreadGroupChild> samplerChildrenList = requests.stream().<ThreadGroupChild>map(req -> {
-                    logger.debug("Processing HttpRequest -> id: {}, name: {}, path: {}", req.getId(), req.getName(), req.getPath());
+                    logger.debug("Processing HttpRequest -> id: {}, name: {}, path: {}", req.getId(), req.getName(), req.getUrl());
                     
                     List<HttpHeader> reqHeaders = httpHeaderRepository.findByHttpRequestId(req.getId());
                     List<DataExtractor> reqExtractors = dataExtractorRepository.findByHttpRequestId(req.getId());
@@ -111,22 +111,50 @@ public class LoadTestEngineService {
                     // 3. Add Extractors
                     samplerChildren.addAll(buildDslExtractors(reqExtractors));
 
-                    return httpSampler(req.getName(), req.getPath())
-                            .method(req.getMethod())
-                            .children(samplerChildren.toArray(new BaseSampler.SamplerChild[0]));
-                }).collect(Collectors.toList());
+                    // --- UPDATED SAMPLER LOGIC HERE ---
+                    var sampler = httpSampler(req.getName(), req.getUrl())
+                            .method(req.getMethod());
 
-                // // Using the direct factory method to avoid ".threadCount()" undefined errors
-                // DslDefaultThreadGroup dslGroup = threadGroup(
-                //         group.getName(), 
-                //         group.getNumThreads(), 
-                //         group.getLoopCount(), 
-                //         samplerChildrenList.toArray(new ThreadGroupChild[0])
-                // ).rampTo(group.getNumThreads(), Duration.ofSeconds(group.getRampUpTime()));
+                    // Check if Content-Type is urlencoded
+                    boolean isUrlEncoded = reqHeaders.stream()
+                            .anyMatch(h -> "Content-Type".equalsIgnoreCase(h.getName()) && 
+                                           h.getValue() != null && 
+                                           h.getValue().toLowerCase().contains("application/x-www-form-urlencoded"));
+
+                    if (req.getBodyData() != null && !req.getBodyData().isBlank()) {
+                        if (isUrlEncoded) {
+                            // Parse the bodyData string (e.g., "key1=value1&key2=value2") into parameters
+                            String[] pairs = req.getBodyData().split("&");
+                            for (String pair : pairs) {
+                                int idx = pair.indexOf("=");
+                                try {
+                                    if (idx > 0) {
+                                        String key = java.net.URLDecoder.decode(pair.substring(0, idx), java.nio.charset.StandardCharsets.UTF_8);
+                                        String value = java.net.URLDecoder.decode(pair.substring(idx + 1), java.nio.charset.StandardCharsets.UTF_8);
+                                        sampler.param(key, value);
+                                    } else if (idx == -1 && !pair.isBlank()) {
+                                        // Handle cases where a key is passed without an equals sign
+                                        String key = java.net.URLDecoder.decode(pair, java.nio.charset.StandardCharsets.UTF_8);
+                                        sampler.param(key, "");
+                                    }
+                                } catch (Exception ex) {
+                                    logger.warn("Failed to decode url-encoded parameter pair: {}", pair, ex);
+                                }
+                            }
+                        } else {
+                            // Standard raw JSON/XML/Text body
+                            sampler.body(req.getBodyData());
+                        }
+                    }
+
+                    return sampler.children(samplerChildren.toArray(new BaseSampler.SamplerChild[0]));
+                    // ----------------------------------
+                    
+                }).collect(Collectors.toList());
 
                 // Use the fluent API as suggested by the DSL exception to correctly order ramp-up and iterations
                 DslDefaultThreadGroup dslGroup = threadGroup(group.getName())
-                        .rampTo(group.getNumThreads(), Duration.ofSeconds(group.getRampUpTime()))
+                        .rampTo(group.getNumThreads(), java.time.Duration.ofSeconds(group.getRampUpTime()))
                         .holdIterating(group.getLoopCount())
                         .children(samplerChildrenList.toArray(new ThreadGroupChild[0]));                
                 
@@ -149,6 +177,10 @@ public class LoadTestEngineService {
             logger.info("Setting JTL writer path to: {}", jtlPath);
             testPlanChildren.add(jtlWriter(jtlPath));
 
+            String htmlReportPath = "api/metrics/report-" + execution.getId();
+            logger.info("Setting HTML Report path to: {}", htmlReportPath);
+            testPlanChildren.add(htmlReporter(htmlReportPath));            
+
             // 5. Pass as a single array
             DslTestPlan testPlan = testPlan(
                     testPlanChildren.toArray(new DslTestPlan.TestPlanChild[0])
@@ -166,8 +198,7 @@ public class LoadTestEngineService {
             testExecutionService.updateTestExecutionStatus(executionId, "FAILED");
             throw e; // Rethrow to ensure executeTestPlanAsync catches it as well
         }
-    }
-
+    }    
     private BaseSampler.SamplerChild buildHeaderManagerAsChild(List<HttpHeader> headers) {
         var manager = httpHeaders();
         if (headers != null) {

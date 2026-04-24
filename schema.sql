@@ -28,6 +28,8 @@ CREATE TABLE thread_group (
     name VARCHAR(255) NOT NULL,
     description TEXT,
     
+    request_sequence BIGINT[],
+    
     num_threads INTEGER NOT NULL DEFAULT 1,
     ramp_up_time INTEGER NOT NULL DEFAULT 1,
     loop_count INTEGER NOT NULL DEFAULT 1,
@@ -50,9 +52,7 @@ CREATE TABLE http_request (
     thread_group_id BIGINT NOT NULL REFERENCES thread_group(id) ON DELETE CASCADE,
     name VARCHAR(255) NOT NULL,
     description TEXT,
-    
-    sequence_order INTEGER NOT NULL,
-    
+
     protocol VARCHAR(10) DEFAULT 'https',
     domain VARCHAR(255) NOT NULL,
     port INTEGER,
@@ -174,3 +174,35 @@ CREATE TABLE execution_metric (
 CREATE INDEX idx_http_req_thread ON http_request(thread_group_id);
 CREATE INDEX idx_metric_execution ON execution_metric(test_execution_id);
 CREATE INDEX idx_metric_request ON execution_metric(http_request_id);
+
+-- Trigger to update request_sequence on INSERT
+CREATE OR REPLACE FUNCTION update_request_sequence_on_insert()
+RETURNS TRIGGER AS $$
+BEGIN
+  UPDATE thread_group
+  SET request_sequence = array_append(request_sequence, NEW.id)
+  WHERE id = NEW.thread_group_id;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER http_request_insert_trigger
+AFTER INSERT ON http_request
+FOR EACH ROW
+EXECUTE FUNCTION update_request_sequence_on_insert();
+
+-- Trigger to update request_sequence on DELETE
+CREATE OR REPLACE FUNCTION update_request_sequence_on_delete()
+RETURNS TRIGGER AS $$
+BEGIN
+  UPDATE thread_group
+  SET request_sequence = array_remove(request_sequence, OLD.id)
+  WHERE id = OLD.thread_group_id;
+  RETURN OLD;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER http_request_delete_trigger
+AFTER DELETE ON http_request
+FOR EACH ROW
+EXECUTE FUNCTION update_request_sequence_on_delete();

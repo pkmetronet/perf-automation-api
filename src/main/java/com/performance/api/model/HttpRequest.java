@@ -29,9 +29,6 @@ public class HttpRequest {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    @Column(name = "sequence_order", nullable = false)
-    private Integer sequenceOrder;
-
     @Column(length = 10)
     private String protocol = "https";
 
@@ -74,4 +71,40 @@ public class HttpRequest {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private ZonedDateTime updatedAt;
+
+    /**
+     * Helper method to dynamically generate the complete URL
+     * for the JMeter httpSampler.
+     */
+    public String getUrl() {
+        StringBuilder url = new StringBuilder();
+        
+        // 1. Protocol
+        String safeProtocol = (protocol != null && !protocol.isBlank()) ? protocol.replace("://", "") : "https";
+        url.append(safeProtocol).append("://");
+        
+        // 2. Domain (strip trailing slash if user accidentally added one)
+        String safeDomain = (domain != null) ? domain : "";
+        if (safeDomain.endsWith("/")) {
+            safeDomain = safeDomain.substring(0, safeDomain.length() - 1);
+        }
+        url.append(safeDomain);
+        
+        // 3. Port (only append if it exists)
+        if (port != null) {
+            url.append(":").append(port);
+        }
+        
+        // 4. Path (ensure it safely starts with a slash)
+        if (path != null && !path.isBlank()) {
+            if (!path.startsWith("/")) {
+                url.append("/");
+            }
+            url.append(path);
+        } else {
+            url.append("/"); // Default to root if no path is provided
+        }
+        
+        return url.toString();
+    }    
 }

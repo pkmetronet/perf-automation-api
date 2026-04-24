@@ -17,6 +17,7 @@ public class ThreadGroupService {
     }
 
     public ThreadGroup createThreadGroup(ThreadGroup threadGroup) {
+        threadGroup.setRequestSequence(null);
         return threadGroupRepository.save(threadGroup);
     }
 
@@ -37,6 +38,7 @@ public class ThreadGroupService {
             existing.setTestPlanId(updatedDetails.getTestPlanId());
             existing.setName(updatedDetails.getName());
             existing.setDescription(updatedDetails.getDescription());
+            existing.setRequestSequence(updatedDetails.getRequestSequence());
             existing.setNumThreads(updatedDetails.getNumThreads());
             existing.setRampUpTime(updatedDetails.getRampUpTime());
             existing.setLoopCount(updatedDetails.getLoopCount());
