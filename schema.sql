@@ -172,6 +172,7 @@ CREATE TABLE execution_metric (
 );
 
 CREATE INDEX idx_http_req_thread ON http_request(thread_group_id);
+CREATE INDEX idx_test_execution_test_plan ON test_execution(test_plan_id);
 CREATE INDEX idx_metric_execution ON execution_metric(test_execution_id);
 CREATE INDEX idx_metric_request ON execution_metric(http_request_id);
 

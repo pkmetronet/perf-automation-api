@@ -175,11 +175,12 @@ private void runJMeterDslEngine(Long executionId, Long testPlanId) throws Except
                     ? execution.getS3KeyResultTree() 
                     : "api/metrics/" + execution.getId() + ".jtl";
             logger.info("Setting JTL writer path to: {}", jtlPath);
+
             testPlanChildren.add(jtlWriter(jtlPath));
 
             String htmlReportPath = "api/metrics/report-" + execution.getId();
             logger.info("Setting HTML Report path to: {}", htmlReportPath);
-            testPlanChildren.add(htmlReporter(htmlReportPath));            
+            testPlanChildren.add(htmlReporter(htmlReportPath, ""));            
 
             // 5. Pass as a single array
             DslTestPlan testPlan = testPlan(
@@ -213,7 +214,7 @@ private void runJMeterDslEngine(Long executionId, Long testPlanId) throws Except
             dslAssertions.add(
                 responseAssertion()
                     .fieldToTest(DslResponseAssertion.TargetField.RESPONSE_CODE)
-                    .containsSubstrings("200")
+                    .matchesRegexes("200|201")
             );
             return dslAssertions;
         }
@@ -222,9 +223,13 @@ private void runJMeterDslEngine(Long executionId, Long testPlanId) throws Except
             String type = assertion.getType() != null ? assertion.getType().toUpperCase() : "";
             switch (type) {
                 case "STATUS_CODE":
+                    String expected = assertion.getExpectedValue();
+                    if ("200".equals(expected) || "201".equals(expected)) {
+                        expected = "200|201";
+                    }
                     dslAssertions.add(responseAssertion()
                         .fieldToTest(DslResponseAssertion.TargetField.RESPONSE_CODE)
-                        .containsSubstrings(assertion.getExpectedValue()));
+                        .matchesRegexes(expected));
                     break;
                 case "RESPONSE_BODY":
                     if ("CONTAINS".equalsIgnoreCase(assertion.getMatchingRule())) {
@@ -239,7 +244,7 @@ private void runJMeterDslEngine(Long executionId, Long testPlanId) throws Except
                 default:
                     dslAssertions.add(responseAssertion()
                         .fieldToTest(DslResponseAssertion.TargetField.RESPONSE_CODE)
-                        .containsSubstrings(assertion.getExpectedValue()));
+                        .matchesRegexes(assertion.getExpectedValue()));
                     break;
             }
         }
